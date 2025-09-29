@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Drosera Quiz</title>
+  <!-- Link to CSS (create style.css next) -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- =======================
+       WELCOME SCREEN
+       ======================= -->
+  <main id="welcome-screen" class="screen active">
+    <!-- Put your logo file in the repo root (images also OK) and name it drosera-logo.png -->
+    <img src="drosera-logo.png" alt="Drosera logo" class="logo" />
+    <h1 class="title">Welcome Drosera fam</h1>
+    <p class="subtitle">15 random questions from a pool of 75 — good luck!</p>
+
+    <div class="controls">
+      <label for="playerName" class="sr-only">Your name (optional)</label>
+      <input id="playerName" type="text" placeholder="Enter your name (optional)" />
+      <button id="startBtn" class="btn primary">Start Quiz</button>
+    </div>
+  </main>
+
+  <!-- =======================
+       QUIZ SCREEN
+       ======================= -->
+  <main id="quiz-screen" class="screen hidden" aria-hidden="true">
+    <div class="quiz-header">
+      <div id="progressText">Question 1 / 15</div>
+      <div id="progressBar" aria-hidden="true"><div id="progressFill"></div></div>
+    </div>
+
+    <section id="question-area" class="card">
+      <h2 id="questionText" class="question">Loading…</h2>
+      <img id="questionImage" src="" alt="" class="qimg hidden" />
+      <div id="optionsContainer" class="options" role="list"></div>
+    </section>
+
+    <div class="controls">
+      <button id="nextBtn" class="btn primary hidden">Next</button>
+      <button id="quitBtn" class="btn ghost">Quit</button>
+    </div>
+  </main>
+
+  <!-- =======================
+       RESULT SCREEN
+       ======================= -->
+  <main id="result-screen" class="screen hidden" aria-hidden="true">
+    <h2 id="resultMessage" class="title">Result</h2>
+
+    <!-- Image will switch to well-done.png or sorry.png by script -->
+    <img id="resultImage" class="result-image hidden" src="" alt="result image" />
+
+    <p id="scoreText" class="score">You scored: 0 / 15 (0%)</p>
+
+    <div class="controls">
+      <button id="restartBtn" class="btn primary">Play Again</button>
+      <button id="homeBtn" class="btn ghost">Home</button>
+    </div>
+
+    <section class="leaderboard-block">
+      <h3>Top Scores</h3>
+      <ol id="leaderboard" class="leaderboard"></ol>
+    </section>
+  </main>
+
+  <!-- Link to JS (create script.js next) -->
+  <script src="script.js" defer></script>
+</body>
+  </html>
