@@ -1,0 +1,156 @@
+/* ===============================
+   General Styles
+   =============================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0d1117; /* dark background */
+  color: #f0f6fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ===============================
+   Screen Layout
+   =============================== */
+.screen {
+  display: none;
+  text-align: center;
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  padding: 20px;
+}
+
+.screen.active {
+  display: block;
+}
+
+h1, h2, h3 {
+  margin-bottom: 15px;
+}
+
+.subtitle {
+  margin: 10px 0 20px;
+  font-size: 1rem;
+  color: #8b949e;
+}
+
+/* ===============================
+   Buttons
+   =============================== */
+button {
+  cursor: pointer;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.btn.primary {
+  background: #238636;
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background: #2ea043;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: #c9d1d9;
+  border: 1px solid #c9d1d9;
+}
+
+.btn.ghost:hover {
+  background: #30363d;
+}
+
+/* ===============================
+   Quiz Section
+   =============================== */
+.card {
+  background: #161b22;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.options {
+  list-style: none;
+  padding: 0;
+}
+
+.options button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 10px 0;
+  padding: 12px;
+  background: #21262d;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  color: #c9d1d9;
+}
+
+.options button:hover {
+  background: #30363d;
+}
+
+/* Correct / Wrong states */
+.options button.correct {
+  background: #238636;
+  color: white;
+}
+
+.options button.wrong {
+  background: #da3633;
+  color: white;
+}
+
+/* ===============================
+   Progress Bar
+   =============================== */
+#progressBar {
+  background: #30363d;
+  height: 10px;
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+#progressFill {
+  height: 100%;
+  background: #2ea043;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* ===============================
+   Result Screen
+   =============================== */
+.score {
+  font-size: 1.2rem;
+  margin: 15px 0;
+}
+
+.leaderboard-block {
+  margin-top: 20px;
+  background: #161b22;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.leaderboard-block h3 {
+  margin-bottom: 10px;
+}
