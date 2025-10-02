@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Drosera Quiz</title>
-  <!-- Link to CSS (create style.css next) -->
+  <!-- Link to CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,10 +12,9 @@
        WELCOME SCREEN
        ======================= -->
   <main id="welcome-screen" class="screen active">
-    <!-- Put your logo file in the repo root (images also OK) and name it drosera-logo.png -->
     <img src="drosera-logo.png" alt="Drosera logo" class="logo" />
     <h1 class="title">Welcome Drosera fam</h1>
-    <p class="subtitle">15 random questions from a pool of 75 — good luck!</p>
+    <p class="subtitle">15 random questions from a pool of 80 — good luck!</p>
 
     <div class="controls">
       <label for="playerName" class="sr-only">Your name (optional)</label>
@@ -30,6 +29,7 @@
   <main id="quiz-screen" class="screen hidden" aria-hidden="true">
     <div class="quiz-header">
       <div id="progressText">Question 1 / 15</div>
+      <div id="timer">Time left: 10s</div>
       <div id="progressBar" aria-hidden="true"><div id="progressFill"></div></div>
     </div>
 
@@ -51,7 +51,6 @@
   <main id="result-screen" class="screen hidden" aria-hidden="true">
     <h2 id="resultMessage" class="title">Result</h2>
 
-    <!-- Image will switch to well-done.png or sorry.png by script -->
     <img id="resultImage" class="result-image hidden" src="" alt="result image" />
 
     <p id="scoreText" class="score">You scored: 0 / 15 (0%)</p>
@@ -67,7 +66,7 @@
     </section>
   </main>
 
-  <!-- Link to JS (create script.js next) -->
+  <!-- Link to JS -->
   <script src="script.js" defer></script>
 </body>
-  </html>
+    </html>
