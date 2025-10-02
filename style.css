@@ -137,6 +137,16 @@ button {
 }
 
 /* ===============================
+   Timer
+   =============================== */
+#timer {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #f0f6fc;
+  margin-bottom: 10px;
+}
+
+/* ===============================
    Result Screen
    =============================== */
 .score {
@@ -153,4 +163,4 @@ button {
 
 .leaderboard-block h3 {
   margin-bottom: 10px;
-}
+   }
