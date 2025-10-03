@@ -27,9 +27,14 @@
        ======================= -->
   <main id="quiz-screen" class="screen hidden" aria-hidden="true">
     <div class="quiz-header">
-      <div id="progressText">Question 1 / 15</div>
-      <div id="timer">Time left: 10s</div>
-      <div id="progressBar" aria-hidden="true"><div id="progressFill"></div></div>
+      <div class="quiz-header-top">
+        <div id="progressText">Question 1 / 15</div>
+        <div id="timer">Time left: 10s</div>
+      </div>
+
+      <div id="progressBar" aria-hidden="true">
+        <div id="progressFill"></div>
+      </div>
     </div>
 
     <section id="question-area" class="card">
@@ -48,7 +53,6 @@
        RESULT SCREEN
        ======================= -->
   <main id="result-screen" class="screen hidden" aria-hidden="true">
-    <!-- ✅ Dynamic result heading -->
     <h2 id="resultMessage" class="title">Result</h2>
 
     <img id="resultImage" class="result-image hidden" src="" alt="result image" />
