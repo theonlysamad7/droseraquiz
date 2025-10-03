@@ -154,10 +154,14 @@ button {
    Progress + Timer
    =============================== */
 .quiz-header {
+  margin-bottom: 15px;
+}
+
+.quiz-header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 #progressBar {
@@ -165,9 +169,7 @@ button {
   height: 10px;
   width: 100%;
   border-radius: 5px;
-  margin-left: 15px;
   overflow: hidden;
-  flex: 1;
 }
 
 #progressFill {
