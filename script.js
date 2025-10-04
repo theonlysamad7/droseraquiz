@@ -380,7 +380,12 @@ function renderLeaderboard() {
   EVENTS wiring
 **********************/
 document.addEventListener('DOMContentLoaded', () => {
-  // start / next / quit / restart / home
   if (dom.startBtn) dom.startBtn.addEventListener('click', startQuiz);
-  if (dom.nextBtn) dom.nextBtn.addEventListener('click', () => {
-    // If next p
+  if (dom.nextBtn) dom.nextBtn.addEventListener('click', goNext);
+  if (dom.quitBtn) dom.quitBtn.addEventListener('click', quitToHome);
+  if (dom.restartBtn) dom.restartBtn.addEventListener('click', startQuiz);
+  if (dom.homeBtn) dom.homeBtn.addEventListener('click', showWelcome);
+
+  // show welcome leaderboard on first load
+  showWelcome();
+});
