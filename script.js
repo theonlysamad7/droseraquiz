@@ -319,24 +319,18 @@ dom.resultScreen.classList.add('active');
 const percent = Math.round((score / QUESTIONS_PER_QUIZ) * 100);
 dom.scoreText.textContent = You scored: ${score} / ${QUESTIONS_PER_QUIZ} (${percent}%);
 
-// ✅ Fixed image paths
 if (percent >= PASS_PERCENT) {
 dom.resultMessage.textContent = "🎉 Well done!";
-if (dom.resultImage) {
-dom.resultImage.src = 'well-done.png';
-dom.resultImage.classList.remove('hidden');
-}
+if (dom.resultImage) { dom.resultImage.src = 'well-done.png'; dom.resultImage.classList.remove('hidden'); }
 } else {
 dom.resultMessage.textContent = "😔 Better luck next time";
-if (dom.resultImage) {
-dom.resultImage.src = 'sorry.png';
-dom.resultImage.classList.remove('hidden');
-}
+if (dom.resultImage) { dom.resultImage.src = sorry.png'; dom.resultImage.classList.remove('hidden'); }
 }
 
 saveToLeaderboard({ name: playerName, percent, raw: score, ts: Date.now() });
 renderLeaderboard();
 }
+
 /**********************
 LEADERBOARD localStorage
 **********************/
@@ -384,7 +378,7 @@ dom.leaderboard.appendChild(li);
 
 /**********************
 EVENTS wiring
-**********************/v
+**********************/
 document.addEventListener('DOMContentLoaded', () => {
 if (dom.startBtn) dom.startBtn.addEventListener('click', startQuiz);
 if (dom.nextBtn) dom.nextBtn.addEventListener('click', goNext);
@@ -396,4 +390,4 @@ if (dom.homeBtn) dom.homeBtn.addEventListener('click', showWelcome);
 showWelcome();
 });
 
-                                                                     
+                                                                  
