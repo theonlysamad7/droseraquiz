@@ -321,10 +321,10 @@ dom.scoreText.textContent = You scored: ${score} / ${QUESTIONS_PER_QUIZ} (${perc
 
 if (percent >= PASS_PERCENT) {
 dom.resultMessage.textContent = "🎉 Well done!";
-if (dom.resultImage) { dom.resultImage.src = 'well-done.png'; dom.resultImage.classList.remove('hidden'); }
+if (dom.resultImage) { dom.resultImage.src = 'welldone.png'; dom.resultImage.classList.remove('hidden'); }
 } else {
 dom.resultMessage.textContent = "😔 Better luck next time";
-if (dom.resultImage) { dom.resultImage.src = sorry.png'; dom.resultImage.classList.remove('hidden'); }
+if (dom.resultImage) { dom.resultImage.src = 'betterluck.png'; dom.resultImage.classList.remove('hidden'); }
 }
 
 saveToLeaderboard({ name: playerName, percent, raw: score, ts: Date.now() });
@@ -389,5 +389,6 @@ if (dom.homeBtn) dom.homeBtn.addEventListener('click', showWelcome);
 // show welcome leaderboard on first load
 showWelcome();
 });
+
 
                                                                   
