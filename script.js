@@ -229,7 +229,7 @@ currentTimer = setInterval(() => {
 secondsLeft--;
 updateTimerDisplay();
 if (secondsLeft <= 0) {
-// time up: reveal correct and move on after short pause
+// time up: reveal correct and move after short pause
 stopTimer();
 revealCorrectOnTimeout();
 }
