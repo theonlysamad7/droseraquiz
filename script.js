@@ -1,5 +1,5 @@
-// script.js - Drosera Quiz (final)
-// - Uses your 80 questions (unchanged)
+// script.js - Drosera Quiz (final, complete)
+// - 80 questions included (unchanged text you provided)
 // - 15 random questions per run
 // - 10 seconds per question
 // - Options shuffled per question
@@ -13,10 +13,10 @@ const QUESTIONS_PER_QUIZ = 15;
 const TIMER_SECONDS = 10;
 const LEADERBOARD_KEY = "drosera_quiz_leaderboard_v1";
 const LEADERBOARD_LIMIT = 50;
-const PASS_PERCENT = 50; // >= shows Well done
+const PASS_PERCENT = 50; // >= shows well-done image
 
 /**********************
-QUESTION BANK (80) — exactly as you provided
+QUESTION BANK (80)
 **********************/
 const QUESTION_BANK = [
 { question: "What is Drosera primarily designed for?", options: ["Gaming applications","Automating monitoring and response for dApps","Token minting","Wallet creation"], answer: 1 },
@@ -105,30 +105,30 @@ const QUESTION_BANK = [
 DOM
 **********************/
 const dom = {
-welcomeScreen: document.getElementById('welcome-screen'),
-quizScreen: document.getElementById('quiz-screen'),
-resultScreen: document.getElementById('result-screen'),
-playerNameInput: document.getElementById('playerName'),
-startBtn: document.getElementById('startBtn'),
-progressText: document.getElementById('progressText'),
-progressFill: document.getElementById('progressFill'),
-timer: document.getElementById('timer'),
-questionText: document.getElementById('questionText'),
-optionsContainer: document.getElementById('optionsContainer'),
-nextBtn: document.getElementById('nextBtn'),
-quitBtn: document.getElementById('quitBtn'),
-resultMessage: document.getElementById('resultMessage'),
-resultImage: document.getElementById('resultImage'),
-scoreText: document.getElementById('scoreText'),
-restartBtn: document.getElementById('restartBtn'),
-homeBtn: document.getElementById('homeBtn'),
-leaderboard: document.getElementById('leaderboard')
+  welcomeScreen: document.getElementById('welcome-screen'),
+  quizScreen: document.getElementById('quiz-screen'),
+  resultScreen: document.getElementById('result-screen'),
+  playerNameInput: document.getElementById('playerName'),
+  startBtn: document.getElementById('startBtn'),
+  progressText: document.getElementById('progressText'),
+  progressFill: document.getElementById('progressFill'),
+  timer: document.getElementById('timer'),
+  questionText: document.getElementById('questionText'),
+  optionsContainer: document.getElementById('optionsContainer'),
+  nextBtn: document.getElementById('nextBtn'),
+  quitBtn: document.getElementById('quitBtn'),
+  resultMessage: document.getElementById('resultMessage'),
+  resultImage: document.getElementById('resultImage'),
+  scoreText: document.getElementById('scoreText'),
+  restartBtn: document.getElementById('restartBtn'),
+  homeBtn: document.getElementById('homeBtn'),
+  leaderboard: document.getElementById('leaderboard')
 };
 
 /**********************
 STATE
 **********************/
-let quizQuestions = []; // picked QUESTIONS_PER_QUIZ entries
+let quizQuestions = [];
 let currentIndex = 0;
 let currentTimer = null;
 let secondsLeft = TIMER_SECONDS;
@@ -136,259 +136,248 @@ let playerName = '';
 let score = 0;
 
 /**********************
-UTILITIES
+UTILS
 **********************/
 function shuffleArray(arr) {
-for (let i = arr.length - 1; i > 0; i--) {
-const j = Math.floor(Math.random() * (i + 1));
-[arr[i], arr[j]] = [arr[j], arr[i]];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
 }
-}
-
 function pickRandomQuestions(bank, n) {
-const copy = bank.slice();
-shuffleArray(copy);
-return copy.slice(0, n);
+  const copy = bank.slice();
+  shuffleArray(copy);
+  return copy.slice(0, n);
 }
 
 /**********************
-QUIZ FLOW
+FLOW
 **********************/
 function showWelcome() {
-dom.welcomeScreen.classList.add('active');
-dom.welcomeScreen.classList.remove('hidden');
-dom.quizScreen.classList.remove('active');
-dom.quizScreen.classList.add('hidden');
-dom.resultScreen.classList.remove('active');
-dom.resultScreen.classList.add('hidden');
-renderLeaderboard(); // quick preview
+  if (dom.welcomeScreen) dom.welcomeScreen.classList.remove('hidden');
+  if (dom.welcomeScreen) dom.welcomeScreen.classList.add('active');
+  if (dom.quizScreen) dom.quizScreen.classList.add('hidden');
+  if (dom.resultScreen) dom.resultScreen.classList.add('hidden');
+  renderLeaderboard();
 }
 
 function startQuiz() {
-playerName = (dom.playerNameInput && dom.playerNameInput.value.trim()) || 'Anonymous';
-// pick N random questions
-quizQuestions = pickRandomQuestions(QUESTION_BANK, QUESTIONS_PER_QUIZ);
-currentIndex = 0;
-score = 0;
-// UI switches
-dom.welcomeScreen.classList.remove('active');
-dom.welcomeScreen.classList.add('hidden');
-dom.resultScreen.classList.remove('active');
-dom.resultScreen.classList.add('hidden');
-dom.quizScreen.classList.remove('hidden');
-dom.quizScreen.classList.add('active');
-renderQuestion();
+  playerName = (dom.playerNameInput && dom.playerNameInput.value.trim()) || 'Anonymous';
+  quizQuestions = pickRandomQuestions(QUESTION_BANK, QUESTIONS_PER_QUIZ);
+  currentIndex = 0;
+  score = 0;
+
+  if (dom.welcomeScreen) dom.welcomeScreen.classList.add('hidden');
+  if (dom.quizScreen) dom.quizScreen.classList.remove('hidden');
+  if (dom.resultScreen) dom.resultScreen.classList.add('hidden');
+
+  renderQuestion();
 }
 
 function renderQuestion() {
-stopTimer();
-clearQuestionUI();
+  stopTimer();
+  clearQuestionUI();
 
-const qObj = quizQuestions[currentIndex];
-// update question text and progress
-dom.questionText.textContent = ${currentIndex + 1}. ${qObj.question};
-dom.progressText.textContent = Question ${currentIndex + 1} / ${QUESTIONS_PER_QUIZ};
-const pct = Math.round(((currentIndex) / QUESTIONS_PER_QUIZ) * 100);
-dom.progressFill.style.width = ${pct}%;
+  const qObj = quizQuestions[currentIndex];
+  if (!qObj) return;
 
-// prepare option objects with correctness flag and shuffle them
-const opts = qObj.options.map((txt, i) => ({ text: txt, isCorrect: i === qObj.answer }));
-shuffleArray(opts);
+  if (dom.questionText) dom.questionText.textContent = `${currentIndex + 1}. ${qObj.question}`;
+  if (dom.progressText) dom.progressText.textContent = `Question ${currentIndex + 1} / ${QUESTIONS_PER_QUIZ}`;
+  if (dom.progressFill) {
+    const pct = Math.round(((currentIndex) / QUESTIONS_PER_QUIZ) * 100);
+    dom.progressFill.style.width = `${pct}%`;
+  }
 
-// render options as buttons
-opts.forEach((o, idx) => {
-const b = document.createElement('button');
-b.type = 'button';
-b.className = 'option-btn';
-b.textContent = o.text;
-b.dataset.correct = o.isCorrect ? '1' : '0';
-b.addEventListener('click', () => handleAnswer(b));
-dom.optionsContainer.appendChild(b);
-});
+  const opts = qObj.options.map((txt, i) => ({ text: txt, isCorrect: i === qObj.answer }));
+  shuffleArray(opts);
 
-// hide next button until answered or timed out
-if (dom.nextBtn) dom.nextBtn.classList.add('hidden');
+  opts.forEach((o) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'option-btn';
+    b.textContent = o.text;
+    b.dataset.correct = o.isCorrect ? '1' : '0';
+    b.addEventListener('click', () => handleAnswer(b));
+    if (dom.optionsContainer) dom.optionsContainer.appendChild(b);
+  });
 
-// start timer
-secondsLeft = TIMER_SECONDS;
-updateTimerDisplay();
-startTimer();
+  if (dom.nextBtn) dom.nextBtn.classList.add('hidden');
+
+  secondsLeft = TIMER_SECONDS;
+  updateTimerDisplay();
+  startTimer();
 }
 
 function clearQuestionUI() {
-dom.optionsContainer.innerHTML = '';
-if (dom.resultImage) dom.resultImage.classList.add('hidden');
+  if (dom.optionsContainer) dom.optionsContainer.innerHTML = '';
+  if (dom.resultImage) dom.resultImage.classList.add('hidden');
 }
 
 /**********************
 TIMER
 **********************/
 function startTimer() {
-stopTimer();
-currentTimer = setInterval(() => {
-secondsLeft--;
-updateTimerDisplay();
-if (secondsLeft <= 0) {
-// time up: reveal correct and move after short pause
-stopTimer();
-revealCorrectOnTimeout();
-}
-}, 1000);
+  stopTimer();
+  currentTimer = setInterval(() => {
+    secondsLeft--;
+    updateTimerDisplay();
+    if (secondsLeft <= 0) {
+      stopTimer();
+      revealCorrectOnTimeout();
+    }
+  }, 1000);
 }
 function stopTimer() {
-if (currentTimer) {
-clearInterval(currentTimer);
-currentTimer = null;
-}
+  if (currentTimer) {
+    clearInterval(currentTimer);
+    currentTimer = null;
+  }
 }
 function updateTimerDisplay() {
-if (!dom.timer) return;
-dom.timer.textContent = Time left: ${secondsLeft}s;
-dom.timer.classList.remove('warning', 'danger');
-if (secondsLeft <= 2) dom.timer.classList.add('danger');
-else if (secondsLeft <= 5) dom.timer.classList.add('warning');
+  if (!dom.timer) return;
+  dom.timer.textContent = `Time left: ${secondsLeft}s`;
+  dom.timer.classList.remove('warning', 'danger');
+  if (secondsLeft <= 2) dom.timer.classList.add('danger');
+  else if (secondsLeft <= 5) dom.timer.classList.add('warning');
 }
 
 /**********************
 ANSWER HANDLING
 **********************/
 function handleAnswer(button) {
-stopTimer();
-// disable all buttons
-const btns = dom.optionsContainer.querySelectorAll('button');
-btns.forEach(b => b.disabled = true);
+  stopTimer();
 
-// mark chosen
-const chosenCorrect = button.dataset.correct === '1';
-if (chosenCorrect) {
-button.classList.add('correct');
-score++;
-} else {
-button.classList.add('wrong');
-// highlight correct one
-const correctBtn = [...btns].find(b => b.dataset.correct === '1');
-if (correctBtn) correctBtn.classList.add('correct');
-}
+  const btns = dom.optionsContainer ? dom.optionsContainer.querySelectorAll('button') : [];
+  btns.forEach(b => b.disabled = true);
 
-// show Next button
-if (dom.nextBtn) dom.nextBtn.classList.remove('hidden');
+  const chosenCorrect = button.dataset.correct === '1';
+  if (chosenCorrect) {
+    button.classList.add('correct');
+    score++;
+  } else {
+    button.classList.add('wrong');
+    const correctBtn = [...btns].find(b => b.dataset.correct === '1');
+    if (correctBtn) correctBtn.classList.add('correct');
+  }
+
+  if (dom.nextBtn) dom.nextBtn.classList.remove('hidden');
 }
 
 function revealCorrectOnTimeout() {
-const btns = dom.optionsContainer.querySelectorAll('button');
-btns.forEach(b => {
-b.disabled = true;
-if (b.dataset.correct === '1') b.classList.add('correct');
-});
-// show Next button and auto-advance after short delay
-if (dom.nextBtn) dom.nextBtn.classList.remove('hidden');
-setTimeout(() => {
-goNext();
-}, 900);
+  const btns = dom.optionsContainer ? dom.optionsContainer.querySelectorAll('button') : [];
+  btns.forEach(b => {
+    b.disabled = true;
+    if (b.dataset.correct === '1') b.classList.add('correct');
+  });
+
+  if (dom.nextBtn) dom.nextBtn.classList.remove('hidden');
+
+  setTimeout(() => {
+    goNext();
+  }, 900);
 }
 
 /**********************
 NAVIGATION
 **********************/
 function goNext() {
-// advance index
-currentIndex++;
-if (currentIndex >= QUESTIONS_PER_QUIZ) {
-finishQuiz();
-} else {
-renderQuestion();
-}
+  currentIndex++;
+  if (currentIndex >= QUESTIONS_PER_QUIZ) {
+    finishQuiz();
+  } else {
+    renderQuestion();
+  }
 }
 
 function quitToHome() {
-stopTimer();
-showWelcome();
+  stopTimer();
+  showWelcome();
 }
 
 /**********************
 FINISH & LEADERBOARD
 **********************/
 function finishQuiz() {
-stopTimer();
-// results UI
-dom.quizScreen.classList.remove('active');
-dom.quizScreen.classList.add('hidden');
-dom.resultScreen.classList.remove('hidden');
-dom.resultScreen.classList.add('active');
+  stopTimer();
 
-const percent = Math.round((score / QUESTIONS_PER_QUIZ) * 100);
-dom.scoreText.textContent = You scored: ${score} / ${QUESTIONS_PER_QUIZ} (${percent}%);
+  if (dom.quizScreen) dom.quizScreen.classList.add('hidden');
+  if (dom.resultScreen) dom.resultScreen.classList.remove('hidden');
 
-if (percent >= PASS_PERCENT) {
-dom.resultMessage.textContent = "🎉 Well done!";
-if (dom.resultImage) { dom.resultImage.src = 'welldone.png'; dom.resultImage.classList.remove('hidden'); }
-} else {
-dom.resultMessage.textContent = "😔 Better luck next time";
-if (dom.resultImage) { dom.resultImage.src = 'betterluck.png'; dom.resultImage.classList.remove('hidden'); }
-}
+  const percent = Math.round((score / QUESTIONS_PER_QUIZ) * 100);
+  if (dom.scoreText) dom.scoreText.textContent = `You scored: ${score} / ${QUESTIONS_PER_QUIZ} (${percent}%)`;
 
-saveToLeaderboard({ name: playerName, percent, raw: score, ts: Date.now() });
-renderLeaderboard();
+  if (percent >= PASS_PERCENT) {
+    if (dom.resultMessage) dom.resultMessage.textContent = "🎉 Well done!";
+    if (dom.resultImage) {
+      dom.resultImage.src = 'well-done.png';
+      dom.resultImage.classList.remove('hidden');
+    }
+  } else {
+    if (dom.resultMessage) dom.resultMessage.textContent = "😔 Better luck next time";
+    if (dom.resultImage) {
+      dom.resultImage.src = 'sorry.png';
+      dom.resultImage.classList.remove('hidden');
+    }
+  }
+
+  saveToLeaderboard({ name: playerName || 'Anonymous', percent, raw: score, ts: Date.now() });
+  renderLeaderboard();
 }
 
 /**********************
 LEADERBOARD localStorage
 **********************/
 function loadLeaderboard() {
-try {
-const raw = localStorage.getItem(LEADERBOARD_KEY);
-if (!raw) return [];
-const parsed = JSON.parse(raw);
-if (!Array.isArray(parsed)) return [];
-return parsed;
-} catch (e) {
-console.error("Failed to load leaderboard", e);
-return [];
-}
+  try {
+    const raw = localStorage.getItem(LEADERBOARD_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed;
+  } catch (e) {
+    console.error("Failed to load leaderboard", e);
+    return [];
+  }
 }
 
 function saveToLeaderboard(entry) {
-const list = loadLeaderboard();
-list.push(entry);
-// sort by percent desc, then recent
-list.sort((a, b) => (b.percent - a.percent) || (b.ts - a.ts));
-const trimmed = list.slice(0, LEADERBOARD_LIMIT);
-try {
-localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(trimmed));
-} catch (e) {
-console.error("Failed to save leaderboard", e);
-}
+  const list = loadLeaderboard();
+  list.push(entry);
+  list.sort((a, b) => (b.percent - a.percent) || (b.ts - a.ts));
+  const trimmed = list.slice(0, LEADERBOARD_LIMIT);
+  try {
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(trimmed));
+  } catch (e) {
+    console.error("Failed to save leaderboard", e);
+  }
 }
 
 function renderLeaderboard() {
-const list = loadLeaderboard();
-if (!dom.leaderboard) return;
-dom.leaderboard.innerHTML = '';
-if (list.length === 0) {
-dom.leaderboard.innerHTML = '<li>No scores yet — be the first!</li>';
-return;
-}
-list.forEach((item, idx) => {
-const li = document.createElement('li');
-const date = new Date(item.ts);
-li.textContent = ${idx + 1}. ${item.name} — ${item.percent}% (${item.raw}/${QUESTIONS_PER_QUIZ}) • ${date.toLocaleDateString()};
-dom.leaderboard.appendChild(li);
-});
+  const list = loadLeaderboard();
+  if (!dom.leaderboard) return;
+  dom.leaderboard.innerHTML = '';
+  if (list.length === 0) {
+    dom.leaderboard.innerHTML = '<li>No scores yet — be the first!</li>';
+    return;
+  }
+  list.forEach((item, idx) => {
+    const li = document.createElement('li');
+    const date = new Date(item.ts);
+    li.textContent = `${idx + 1}. ${item.name} — ${item.percent}% (${item.raw}/${QUESTIONS_PER_QUIZ}) • ${date.toLocaleDateString()}`;
+    dom.leaderboard.appendChild(li);
+  });
 }
 
 /**********************
 EVENTS wiring
 **********************/
 document.addEventListener('DOMContentLoaded', () => {
-if (dom.startBtn) dom.startBtn.addEventListener('click', startQuiz);
-if (dom.nextBtn) dom.nextBtn.addEventListener('click', goNext);
-if (dom.quitBtn) dom.quitBtn.addEventListener('click', quitToHome);
-if (dom.restartBtn) dom.restartBtn.addEventListener('click', startQuiz);
-if (dom.homeBtn) dom.homeBtn.addEventListener('click', showWelcome);
+  if (dom.startBtn) dom.startBtn.addEventListener('click', startQuiz);
+  if (dom.nextBtn) dom.nextBtn.addEventListener('click', goNext);
+  if (dom.quitBtn) dom.quitBtn.addEventListener('click', quitToHome);
+  if (dom.restartBtn) dom.restartBtn.addEventListener('click', startQuiz);
+  if (dom.homeBtn) dom.homeBtn.addEventListener('click', showWelcome);
 
-// show welcome leaderboard on first load
-showWelcome();
+  // show welcome leaderboard on first load
+  showWelcome();
 });
-
-
-                                                                  
