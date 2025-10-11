@@ -114,6 +114,7 @@ const dom = {
   progressFill: document.getElementById('progressFill'),
   timer: document.getElementById('timer'),
   questionText: document.getElementById('questionText'),
+  questionImage: document.getElementById('questionImage'),
   optionsContainer: document.getElementById('optionsContainer'),
   nextBtn: document.getElementById('nextBtn'),
   quitBtn: document.getElementById('quitBtn'),
@@ -158,6 +159,9 @@ function showWelcome() {
   if (dom.welcomeScreen) dom.welcomeScreen.classList.add('active');
   if (dom.quizScreen) dom.quizScreen.classList.add('hidden');
   if (dom.resultScreen) dom.resultScreen.classList.add('hidden');
+
+  // reset any timers just in case
+  stopTimer();
   renderLeaderboard();
 }
 
@@ -168,6 +172,7 @@ function startQuiz() {
   score = 0;
 
   if (dom.welcomeScreen) dom.welcomeScreen.classList.add('hidden');
+  if (dom.welcomeScreen) dom.welcomeScreen.classList.remove('active');
   if (dom.quizScreen) dom.quizScreen.classList.remove('hidden');
   if (dom.resultScreen) dom.resultScreen.classList.add('hidden');
 
@@ -179,7 +184,11 @@ function renderQuestion() {
   clearQuestionUI();
 
   const qObj = quizQuestions[currentIndex];
-  if (!qObj) return;
+  if (!qObj) {
+    // nothing to show (shouldn't happen) -> finish
+    finishQuiz();
+    return;
+  }
 
   if (dom.questionText) dom.questionText.textContent = `${currentIndex + 1}. ${qObj.question}`;
   if (dom.progressText) dom.progressText.textContent = `Question ${currentIndex + 1} / ${QUESTIONS_PER_QUIZ}`;
@@ -188,9 +197,11 @@ function renderQuestion() {
     dom.progressFill.style.width = `${pct}%`;
   }
 
+  // prepare & shuffle options with correctness flag
   const opts = qObj.options.map((txt, i) => ({ text: txt, isCorrect: i === qObj.answer }));
   shuffleArray(opts);
 
+  // render options
   opts.forEach((o) => {
     const b = document.createElement('button');
     b.type = 'button';
@@ -201,8 +212,10 @@ function renderQuestion() {
     if (dom.optionsContainer) dom.optionsContainer.appendChild(b);
   });
 
+  // hide next button until answered / timed out
   if (dom.nextBtn) dom.nextBtn.classList.add('hidden');
 
+  // reset & start timer
   secondsLeft = TIMER_SECONDS;
   updateTimerDisplay();
   startTimer();
@@ -210,6 +223,7 @@ function renderQuestion() {
 
 function clearQuestionUI() {
   if (dom.optionsContainer) dom.optionsContainer.innerHTML = '';
+  if (dom.questionImage) dom.questionImage.classList.add('hidden');
   if (dom.resultImage) dom.resultImage.classList.add('hidden');
 }
 
@@ -282,7 +296,7 @@ NAVIGATION
 **********************/
 function goNext() {
   currentIndex++;
-  if (currentIndex >= QUESTIONS_PER_QUIZ) {
+  if (currentIndex >= quizQuestions.length || currentIndex >= QUESTIONS_PER_QUIZ) {
     finishQuiz();
   } else {
     renderQuestion();
@@ -375,9 +389,4 @@ document.addEventListener('DOMContentLoaded', () => {
   if (dom.startBtn) dom.startBtn.addEventListener('click', startQuiz);
   if (dom.nextBtn) dom.nextBtn.addEventListener('click', goNext);
   if (dom.quitBtn) dom.quitBtn.addEventListener('click', quitToHome);
-  if (dom.restartBtn) dom.restartBtn.addEventListener('click', startQuiz);
-  if (dom.homeBtn) dom.homeBtn.addEventListener('click', showWelcome);
-
-  // show welcome leaderboard on first load
-  showWelcome();
-});
+  if (dom.restartBtn) dom.restartBtn.addEventListener('
