@@ -154,22 +154,49 @@ function pickRandomQuestions(bank, n) {
 FLOW
 **********************/
 function showWelcome() {
-  if (dom.welcomeScreen) dom.welcomeScreen.classList.remove('hidden');
-  if (dom.welcomeScreen) dom.welcomeScreen.classList.add('active');
-  if (dom.quizScreen) dom.quizScreen.classList.add('hidden');
-  if (dom.resultScreen) dom.resultScreen.classList.add('hidden');
+  // Ensure welcome screen visible and others hidden
+  if (dom.welcomeScreen) {
+    dom.welcomeScreen.classList.remove('hidden');
+    dom.welcomeScreen.classList.add('active');
+    dom.welcomeScreen.setAttribute('aria-hidden', 'false');
+  }
+  if (dom.quizScreen) {
+    dom.quizScreen.classList.add('hidden');
+    dom.quizScreen.classList.remove('active');
+    dom.quizScreen.setAttribute('aria-hidden', 'true');
+  }
+  if (dom.resultScreen) {
+    dom.resultScreen.classList.add('hidden');
+    dom.resultScreen.classList.remove('active');
+    dom.resultScreen.setAttribute('aria-hidden', 'true');
+  }
   renderLeaderboard();
 }
 
 function startQuiz() {
+  // pull name
   playerName = (dom.playerNameInput && dom.playerNameInput.value.trim()) || 'Anonymous';
+  // pick N random questions
   quizQuestions = pickRandomQuestions(QUESTION_BANK, QUESTIONS_PER_QUIZ);
   currentIndex = 0;
   score = 0;
 
-  if (dom.welcomeScreen) dom.welcomeScreen.classList.add('hidden');
-  if (dom.quizScreen) dom.quizScreen.classList.remove('hidden');
-  if (dom.resultScreen) dom.resultScreen.classList.add('hidden');
+  // toggle screens
+  if (dom.welcomeScreen) {
+    dom.welcomeScreen.classList.add('hidden');
+    dom.welcomeScreen.classList.remove('active');
+    dom.welcomeScreen.setAttribute('aria-hidden', 'true');
+  }
+  if (dom.quizScreen) {
+    dom.quizScreen.classList.remove('hidden');
+    dom.quizScreen.classList.add('active');
+    dom.quizScreen.setAttribute('aria-hidden', 'false');
+  }
+  if (dom.resultScreen) {
+    dom.resultScreen.classList.add('hidden');
+    dom.resultScreen.classList.remove('active');
+    dom.resultScreen.setAttribute('aria-hidden', 'true');
+  }
 
   renderQuestion();
 }
@@ -179,7 +206,7 @@ function renderQuestion() {
   clearQuestionUI();
 
   const qObj = quizQuestions[currentIndex];
-  if (!qObj) return;
+  if (!qObj) return; // defensive
 
   if (dom.questionText) dom.questionText.textContent = `${currentIndex + 1}. ${qObj.question}`;
   if (dom.progressText) dom.progressText.textContent = `Question ${currentIndex + 1} / ${QUESTIONS_PER_QUIZ}`;
@@ -188,9 +215,11 @@ function renderQuestion() {
     dom.progressFill.style.width = `${pct}%`;
   }
 
+  // prepare option objects with correctness flag and shuffle them
   const opts = qObj.options.map((txt, i) => ({ text: txt, isCorrect: i === qObj.answer }));
   shuffleArray(opts);
 
+  // render options as buttons
   opts.forEach((o) => {
     const b = document.createElement('button');
     b.type = 'button';
@@ -201,8 +230,10 @@ function renderQuestion() {
     if (dom.optionsContainer) dom.optionsContainer.appendChild(b);
   });
 
+  // hide next button until answered or timed out
   if (dom.nextBtn) dom.nextBtn.classList.add('hidden');
 
+  // start timer
   secondsLeft = TIMER_SECONDS;
   updateTimerDisplay();
   startTimer();
@@ -300,8 +331,16 @@ FINISH & LEADERBOARD
 function finishQuiz() {
   stopTimer();
 
-  if (dom.quizScreen) dom.quizScreen.classList.add('hidden');
-  if (dom.resultScreen) dom.resultScreen.classList.remove('hidden');
+  if (dom.quizScreen) {
+    dom.quizScreen.classList.add('hidden');
+    dom.quizScreen.classList.remove('active');
+    dom.quizScreen.setAttribute('aria-hidden', 'true');
+  }
+  if (dom.resultScreen) {
+    dom.resultScreen.classList.remove('hidden');
+    dom.resultScreen.classList.add('active');
+    dom.resultScreen.setAttribute('aria-hidden', 'false');
+  }
 
   const percent = Math.round((score / QUESTIONS_PER_QUIZ) * 100);
   if (dom.scoreText) dom.scoreText.textContent = `You scored: ${score} / ${QUESTIONS_PER_QUIZ} (${percent}%)`;
@@ -323,6 +362,7 @@ function finishQuiz() {
   saveToLeaderboard({ name: playerName || 'Anonymous', percent, raw: score, ts: Date.now() });
   renderLeaderboard();
 }
+
 
 /**********************
 LEADERBOARD localStorage
@@ -368,3 +408,18 @@ function renderLeaderboard() {
   });
 }
 
+/**********************
+EVENTS wiring
+**********************/
+document.addEventListener('DOMContentLoaded', () => {
+  // Attach event listeners only if elements exist
+  if (dom.startBtn) dom.startBtn.addEventListener('click', startQuiz);
+  if (dom.nextBtn) dom.nextBtn.addEventListener('click', goNext);
+  if (dom.quitBtn) dom.quitBtn.addEventListener('click', quitToHome);
+  if (dom.restartBtn) dom.restartBtn.addEventListener('click', startQuiz);
+  if (dom.homeBtn) dom.homeBtn.addEventListener('click', showWelcome);
+
+  // show welcome leaderboard on first load
+  showWelcome();
+});
+    
